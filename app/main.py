@@ -33,23 +33,23 @@ class Post(BaseModel):
     # rating: Optional[float] = None
 
 
-my_post = [
-    {'id': 1, 'title': 'Hobby', 'Content': "PS5 Games, Cricket watching"},
-    {'id': 2, 'title': 'Language', 'Content': "Python and Javascript"},
-    {'id': 3, 'title': 'Food', 'Content': "Dal Fry and Roti"},
-]
+# my_post = [
+#     {'id': 1, 'title': 'Hobby', 'Content': "PS5 Games, Cricket watching"},
+#     {'id': 2, 'title': 'Language', 'Content': "Python and Javascript"},
+#     {'id': 3, 'title': 'Food', 'Content': "Dal Fry and Roti"},
+# ]
 
 
-def findPostByID(id):
-    for p in my_post:
-        if p['id'] == id:
-            return p
+# def findPostByID(id):
+#     for p in my_post:
+#         if p['id'] == id:
+#             return p
 
 
-def findIndex(id):
-    for i, p in enumerate(my_post):
-        if p['id'] == id:
-            return i
+# def findIndex(id):
+#     for i, p in enumerate(my_post):
+#         if p['id'] == id:
+#             return i
 
 
 @app.get("/")
