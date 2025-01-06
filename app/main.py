@@ -100,12 +100,16 @@ def delete_post(id: int):
 
 @app.put("/post/{id}")
 def update_post(id: int, post: Post):
-    postIndex = findIndex(id)
-    if postIndex == None:
+    cursor.execute("update post set title= %s, content = %s, published = %s where id = %s returning * ", 
+                    (post.title, post.content, post.published, str(id))
+                  )
+    
+    updatedPost = cursor.fetchone()
+    conn.commit()
+    
+    if updatedPost == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"No post with id {id} is available to update")
 
-    post_dic = post.model_dump()
-    post_dic['id'] = id
-    my_post[postIndex] = post_dic
-    return {'data': post_dic}
+    
+    return {'data': updatedPost}
