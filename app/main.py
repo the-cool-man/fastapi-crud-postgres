@@ -108,3 +108,63 @@ def update_post(id: int, updated_post: schemas.Post, db: Session = Depends(get_d
     db.commit()
     
     return {'data': post_query.first()}
+
+
+#############################################################################
+
+@app.get("/user")
+def get_users(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    return {'data': users}
+
+
+
+@app.post("/user", status_code=status.HTTP_201_CREATED)
+def create_user(user: schemas.User, db: Session = Depends(get_db)):
+    newUser = models.User(**user.model_dump())
+    db.add(newUser)
+    db.commit()
+    db.refresh(newUser)
+    return {'data': newUser}
+
+
+
+@app.get("/user/{id}")
+def get_user(id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == id).first()
+
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"No user with id {id} is available")
+    
+    return {'data': user}
+
+
+@app.delete("/user/{id}")
+def delete_user(id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == id)
+    
+
+    if user.first() == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"No user with id {id} is available to delete")
+    
+    user.delete(synchronize_session=False)
+    db.commit()
+    
+    return {'data': 'deleted user'}
+
+
+@app.put("/user/{id}")
+def update_user(id: int, updated_user: schemas.User, db: Session = Depends(get_db)):
+    user_query = db.query(models.User).filter(models.User.id == id)
+    user_data = user_query.first()
+    
+    if user_data == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"No user with id {id} is available to update")
+
+    user_query.update(updated_user.model_dump(exclude_unset=True), synchronize_session=False)
+    db.commit()
+    
+    return {'data': user_query.first()}

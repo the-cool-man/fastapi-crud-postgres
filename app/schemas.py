@@ -19,5 +19,24 @@ class Post(BaseModel):
     published: Optional[bool] = True
     class Config:
         orm_mode = True
+        
+        
+#########################################
+        
+        
+class UserBase(BaseModel):
+    email: str
+    password: str
+    
+    
+class UserCreate(UserBase):
+    pass
+    
+    
+class User(BaseModel):
+    email: str
+    password: str
+    class Config:
+        orm_mode = True
 
     
